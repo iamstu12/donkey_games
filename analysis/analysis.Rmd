@@ -61,6 +61,8 @@ sales_all_clean %>%
 
 ```
 
+<br>
+
 **What are the top 10 games in 2016?**
 
 ```{r,echo = FALSE}
@@ -74,6 +76,24 @@ sales_all_clean %>%
 ```
 The results are interesting; in 2016 **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
 
+<hr>
+
+**What are the top 10 games in 2019?**
+
+```{r,echo = FALSE}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(sales_year == 2019) %>% 
+  arrange(desc(global_sales)) %>% 
+  slice_max(global_sales, n = 10)
+
+```
+
+Interestingly, **Nintendo** have been knocked out the top ten in 2019. **Grand Theft Auto** and **Call of Duty** being the top ranked games.
+
+<hr>
+
 **What are the top game genres of 2016?**
 
 ```{r, message=FALSE, echo = FALSE}
@@ -83,13 +103,14 @@ sales_all_clean %>%
   group_by(genre) %>% 
   summarise(global_sales_millions = sum(global_sales)) %>% 
   arrange(desc(global_sales_millions)) %>% 
+  
   ggplot(aes(x = reorder(genre, global_sales_millions), 
              y = global_sales_millions)) +
   geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "from 2016",
+       subtitle = "in 2016",
        x = "Genre", 
        y = "Global Sales (millions)") +
    scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750),
@@ -108,6 +129,45 @@ sales_all_clean %>%
 
 ```
 
+<br>
+
+**What are the top game genres of 2019?**
+
+```{r, message=FALSE, echo = FALSE}
+
+sales_all_clean %>% 
+  filter(sales_year == 2019) %>% 
+  group_by(genre) %>% 
+  summarise(global_sales_millions = sum(global_sales)) %>% 
+  arrange(desc(global_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, global_sales_millions), 
+             y = global_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "Top Performing Games Genres", 
+       subtitle = "in 2019",
+       x = "Genre", 
+       y = "Global Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 200, 400, 600, 800, 1000, 1200),
+                     expand = c(0.025, 0.025))
+
+
+```
+
+```{r, echo = FALSE, message = FALSE}
+
+sales_all_clean %>% 
+  filter(sales_year == 2019) %>% 
+  group_by(genre) %>% 
+  summarise(global_sales_millions = sum(global_sales)) %>% 
+  arrange(desc(global_sales_millions)) 
+
+```
+
+<br>
+
 ### Action Games
 
 ```{r, echo = FALSE}
@@ -115,11 +175,12 @@ sales_all_clean %>%
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
   filter(genre == "Action") %>% 
-  filter(sales_year == 2016) %>% 
   slice_max(global_sales, n = 20)
 
 ```
 **Grand Theft Auto** clearly dominates the **Action** category.
+
+<hr>
 
 ### Sports Games
 
@@ -135,6 +196,8 @@ sales_all_clean %>%
 
 **Wii Sports** clearly wins this category. **FIFA** also highly ranked inthis category.
 
+<hr>
+
 ### Shooter Games
 
 ```{r, echo = FALSE}
@@ -148,6 +211,8 @@ sales_all_clean %>%
 ```
 
 **Duck Hunt**, the classic Nintendo game from 1984 tops this category. **Call of Duty** tops the 'modern' games in this category.
+
+<hr>
 
 ### Role Playing Games
 
@@ -163,6 +228,8 @@ sales_all_clean %>%
 
 **Pokemon** are the clear winners from this category.
 
+<hr>
+
 ### Platform Games
 
 ```{r, echo = FALSE}
@@ -177,6 +244,8 @@ sales_all_clean %>%
 
 **Super Mario** wins.
 
+<hr>
+
 ### Other Games
 
 ```{r, echo = FALSE}
@@ -189,6 +258,8 @@ sales_all_clean %>%
 
 ```
 This is an interesting category as there is quite a mix of top games. It is clear that the Wii is popular, especially with interactive games, such as **Wii Play** and **Just Dance** scoring highly.
+
+<hr>
 
 ### Racing Games
 
@@ -204,6 +275,8 @@ sales_all_clean %>%
 
 **Mario Kart** taking lead in this category. Special mention to **Gran Turismo** also as the top 'non-Nintendo' game.
 
+<hr>
+
 ### Fighting Games
 
 ```{r, echo = FALSE}
@@ -218,6 +291,8 @@ sales_all_clean %>%
 
 **Super Smash Bros. Brawl** for the Wii taking first place in this category. Classic fighting games such as **Tekken** and **Street Fighter** are very popular.
 
+<hr>
+
 ### Simulation Games
 
 ```{r, echo = FALSE}
@@ -229,5 +304,52 @@ sales_all_clean %>%
   slice_max(global_sales, n = 20)
 
 ```
+Interesting result from this category, **Nintendogs** is top in global sales. **The Sims** and **Animal Crossing** also performing well.
 
+<hr>
+
+### Puzzle Games
+
+```{r, echo = FALSE}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Puzzle") %>% 
+  filter(sales_year == 2016) %>% 
+  slice_max(global_sales, n = 20)
+
+```
+**Tetris** is the top classic puzzle game. **Brain Age** and **Professor Layton** games performed very well in this category.
+
+<hr>
+
+### Adventure Games
+
+```{r, echo = FALSE}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Adventure") %>% 
+  filter(sales_year == 2016) %>% 
+  slice_max(global_sales, n = 20)
+
+```
+**Super Mario Land 2: 6 Golden Coins** is the number one 'Adventure' game, released in 1992 for the GameBoy. **Assassin's Creed** is the top 'modern' game in this category.
+
+<hr>
+
+### Strategy Games
+
+```{r, echo = FALSE}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Strategy") %>% 
+  filter(sales_year == 2016) %>% 
+  slice_max(global_sales, n = 20)
+
+```
+**Pokemon Stadium** is the top game in this category.
+
+<hr>
 
