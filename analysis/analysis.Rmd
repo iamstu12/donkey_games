@@ -2,11 +2,47 @@
 title: "Donkey Games"
 author: "Stuart McColl"
 date: "25/01/2021"
-output: html_document
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+
+```{r, echo=FALSE, include=FALSE}
+
+# read in cleaned data and load libraries:
+
+library(tidyverse)
+library(rmarkdown)
+library(pander)
+library(latexpdf)
+library(here)
+
+here::here()
+
+sales_all_clean <- read_csv(here("clean_data", "sales_all_clean"))
+sales_xbox_ps4_clean <- read_csv(here("clean_data", "sales_xbox_ps4_clean"))
+shipped_2019_clean <- read_csv(here("clean_data", "shipped_2019_clean"))
+
+
+```
+
+
+
+
+
+
+
+
 
 
