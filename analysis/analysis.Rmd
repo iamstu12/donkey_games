@@ -48,7 +48,7 @@ The second data set contains the details of all the shipped games from 2019 and 
 
 The final data set contains the sales of XBox One and PS4 games released from 2013 to 2019.
 
-# Data Set Number One
+# Game Sales 2016 and 2019 
 
 ### General Observations
 
@@ -80,7 +80,7 @@ The results are interesting; in 2016 **Nintendo** fill the entire top ten with a
 
 **What are the top 10 games in 2019?**
 
-```{r,echo = FALSE}
+```{r,echo = FALSE, include = T}
 
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
@@ -90,6 +90,30 @@ sales_all_clean %>%
 
 ```
 
+<br>
+
+How do they compare?
+
+```{r, echo = FALSE}
+
+tibble(
+  "2016" = c("Wii Sports (Wii)", "Super Mario Bros. (NES)", 
+             "Mario Kart Wii (Wii)", "Wii Sports Resort (Wii)",
+             "Pokemon Red/Pokemon Blue (GB)", "Tetris (GB)",
+             "New Super Mario Bros. (DS)", "Wii Play (Wii)",
+             "New Super Mario Bros. Wii (Wii)", "Duck Hunt (NES)"),
+  
+  "2019" = c("Grand Theft Auto V (PS3)", "Grand Theft Auto V (PS4)",
+             "Grand Theft Auto: Vice City (PS2)", "Grand Theft Auto V (X360)",
+             "Call of Duty: Black Ops 3 (PS4)", 
+             "Call of Duty: Modern Warfare 3 (X360)", 
+             "Call of Duty: Black Ops (X360)",
+             "Red Dead Redemption 2 (PS4)", "Call of Duty: Black Ops II (X360)",
+             "Call of Duty: Black Ops II (PS3)")
+) %>% 
+  pander()
+
+```
 Interestingly, **Nintendo** have been knocked out the top ten in 2019. **Grand Theft Auto** and **Call of Duty** being the top ranked games.
 
 <hr>
@@ -119,16 +143,6 @@ sales_all_clean %>%
 
 ```
 
-```{r, echo = FALSE, message = FALSE}
-
-sales_all_clean %>% 
-  filter(sales_year == 2016) %>% 
-  group_by(genre) %>% 
-  summarise(global_sales_millions = sum(global_sales)) %>% 
-  arrange(desc(global_sales_millions)) 
-
-```
-
 <br>
 
 **What are the top game genres of 2019?**
@@ -150,32 +164,71 @@ sales_all_clean %>%
        subtitle = "in 2019",
        x = "Genre", 
        y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 200, 400, 600, 800, 1000, 1200),
+   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500),
                      expand = c(0.025, 0.025))
 
 
 ```
 
-```{r, echo = FALSE, message = FALSE}
+<br>
 
-sales_all_clean %>% 
-  filter(sales_year == 2019) %>% 
-  group_by(genre) %>% 
-  summarise(global_sales_millions = sum(global_sales)) %>% 
-  arrange(desc(global_sales_millions)) 
+How do they compare?
+
+```{r, echo = FALSE}
+
+tibble(
+  "2016" = c("Action", "Sports", "Shooter", "Role-Playing", "Platform", "Other",
+             "Racing", "Fighting", "Simulation", "Puzzle", "Adventure", 
+             "Strategy"),
+  "2019" = c("Action", "Sports", "Shooter", "Other", "Racing", "Role-Playing",
+             "Platform", "Fighting", "Adventure", "Simulation", "Strategy",
+             "Puzzle")
+) %>% 
+  pander()
 
 ```
-
-<br>
+Interesting results; you can see that **Action**, **Sports** and **Shooter** 
+games maintained their position as top 3 games genres. **Racing** games have 
+made their way into the top 5.
 
 ### Action Games
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, include = F}
+
+# 2016
 
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
   filter(genre == "Action") %>% 
-  slice_max(global_sales, n = 20)
+  filter(sales_year == 2016) %>% 
+  slice_max(global_sales, n = 5)
+
+```
+
+```{r, echo = FALSE, include = F}
+
+# 2019
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Action") %>% 
+  filter(sales_year == 2019) %>% 
+  slice_max(global_sales, n = 5)
+
+```
+
+```{r, echo = FALSE}
+
+tibble(
+  "2016" = c("Grand Theft Auto V (PS3)", "Grand Theft Auto: San Andreas (PS2)",
+             "Grand Theft Auto V (X360)", "Grand Theft Auto: Vice City (PS2)",
+             "Grand Theft Auto III (PS2)"),
+  
+  "2019" = c("Grand Theft Auto V (PS3)", "Grand Theft Auto V (PS4)",
+             "Grand Theft Auto: Vice City (PS2)", "Grand Theft Auto V (X360)",
+             "Red Dead Redemption 2 (PS4)")
+) %>% 
+  pander()
 
 ```
 **Grand Theft Auto** clearly dominates the **Action** category.
@@ -184,47 +237,125 @@ sales_all_clean %>%
 
 ### Sports Games
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, include = F}
+
+# 2016
 
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
   filter(genre == "Sports") %>% 
   filter(sales_year == 2016) %>% 
-  slice_max(global_sales, n = 20)
+  slice_max(global_sales, n = 5)
 
 ```
 
-**Wii Sports** clearly wins this category. **FIFA** also highly ranked inthis category.
+```{r, echo = FALSE, include = F}
+
+# 2019
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Sports") %>% 
+  filter(sales_year == 2019) %>% 
+  slice_max(global_sales, n = 5)
+
+```
+
+```{r, echo = FALSE}
+
+tibble(
+  "2016" = c("Wii Sports (Wii)", "Wii Sports Resort (Wii)", "Wii Fit (Wii)",
+             "Wii Fit Plus (Wii)", "FIFA 16 (PS4)"),
+  
+  "2019" = c("FIFA 18 (PS4)", "FIFA 17 (PS4)", "FIFA 19 (PS4)", "FIFA 16 (PS4)",
+             "FIFA 13 (PS3)")
+) %>% 
+  pander()
+
+```
+**Wii Sports** clearly wins this category. **FIFA** also highly ranked in this 
+category.
 
 <hr>
 
 ### Shooter Games
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, include = F}
 
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
   filter(genre == "Shooter") %>% 
   filter(sales_year == 2016) %>% 
-  slice_max(global_sales, n = 20)
+  slice_max(global_sales, n = 5)
 
 ```
 
+```{r, echo = FALSE, include = F}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Shooter") %>% 
+  filter(sales_year == 2019) %>% 
+  slice_max(global_sales, n = 5)
+
+```
+
+```{r, echo = FALSE}
+
+tibble(
+  "2016" = c("Duck Hunt (NES)", "Call of Duty: Modern Warfare 3 (X360)",
+             "Call of Duty: Black Ops 3 (PS4)", "Call of Duty: Black Ops (X360)",
+             "Call of Duty: Black Ops II (PS3)"),
+  
+  "2019" = c("Call of Duty: Black Ops 3 (PS4)", 
+             "Call of Duty: Modern Warfare 3 (X360)", 
+             "Call of Duty: Black Ops (X360)",
+             "Call of Duty: Black Ops II (X360)",
+             "Call of Duty: Black Ops II (PS3)"
+             )
+) %>% 
+  pander()
+
+```
 **Duck Hunt**, the classic Nintendo game from 1984 tops this category. **Call of Duty** tops the 'modern' games in this category.
 
 <hr>
 
 ### Role Playing Games
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, include = T}
 
 sales_all_clean %>% 
   select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
   filter(genre == "Role-Playing") %>% 
   filter(sales_year == 2016) %>% 
-  slice_max(global_sales, n = 20)
+  slice_max(global_sales, n = 5)
 
 ```
+
+```{r, echo = FALSE, include = T}
+
+sales_all_clean %>% 
+  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+  filter(genre == "Role-Playing") %>% 
+  filter(sales_year == 2019) %>% 
+  slice_max(global_sales, n = 5)
+
+```
+
+```{r}
+
+tibble(
+  "2016" = c("Pokemon Red/Pokemon Blue (GB)", "Pokemon Gold/Pokemon Silver (GB)",
+             "Pokemon Diamond/Pokemon Pearl (DS)",
+             "Pokemon Ruby/Pokemon Sapphire (GBA)",
+             "Pokemon Black/Pokemon White (DS)")
+) %>% 
+  pander()
+
+```
+
+
 
 **Pokemon** are the clear winners from this category.
 
@@ -352,4 +483,7 @@ sales_all_clean %>%
 **Pokemon Stadium** is the top game in this category.
 
 <hr>
+
+
+
 

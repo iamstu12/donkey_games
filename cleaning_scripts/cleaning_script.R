@@ -124,7 +124,16 @@ unique(sales_2019_clean$genre)
 # Change 'misc' to 'other':
 
 sales_2019_clean <- sales_2019_clean %>% 
-  mutate(genre = recode(genre, "Misc" = "Other"))
+  mutate(genre = recode(genre, "Misc" = "Other",
+                        "Action-Adventure" = "Action",
+                        "Music" = "Other",
+                        "MMO" = "Other",
+                        "Sandbox" = "Other",
+                        "Party" = "Other",
+                        "Board Game" = "Other",
+                        "Visual Novel" = "Other",
+                        "Education" = "Other",
+                        ))
 
 # Rename columns:
 
