@@ -57,23 +57,21 @@ The data is an amalgamation of 4 data sets, each with their own set of sales and
 
 <br>
 
-**What are the top 10 games?**
+# Games History
 
-```{r,echo = FALSE}
+### 1970's
+
+```{r, echo = FALSE}
 
 clean_sales_data %>% 
-  slice_max(global_sales, n = 10)
-
+  filter(year_of_release >= "1970" & year_of_release <= "1979") 
+ 
 ```
-The results are interesting; **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
 
-<hr>
-
-**What are the top game genres?**
-
-```{r, message=FALSE, echo = FALSE}
+```{r, echo = FALSE, message = F}
 
 clean_sales_data %>% 
+  filter(year_of_release >= "1970" & year_of_release <= "1979") %>% 
   group_by(genre) %>% 
   summarise(global_sales_millions = sum(global_sales)) %>% 
   arrange(desc(global_sales_millions)) %>% 
@@ -84,16 +82,50 @@ clean_sales_data %>%
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "from 1970 to 2020",
+       subtitle = "1970s",
        x = "Genre", 
        y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250),
+   scale_y_continuous(breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5),
                      expand = c(0.025, 0.025))
-
+  
+  
 
 ```
 
 <br>
+
+### 1980's
+
+```{r, echo = FALSE}
+
+clean_sales_data %>% 
+  filter(year_of_release >= "1980" & year_of_release <= "1989") 
+ 
+```
+
+```{r, echo = FALSE, message = F}
+
+clean_sales_data %>% 
+  filter(year_of_release >= "1980" & year_of_release <= "1989") %>% 
+  group_by(genre) %>% 
+  summarise(global_sales_millions = sum(global_sales)) %>% 
+  arrange(desc(global_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, global_sales_millions), 
+             y = global_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "Top Performing Games Genres", 
+       subtitle = "1980s",
+       x = "Genre", 
+       y = "Global Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130),
+                     expand = c(0.025, 0.025))
+
+```
+
+# Top Games by Genre
 
 ### Action-Adventure Games
 
@@ -226,88 +258,13 @@ clean_sales_data %>%
 
 <hr>
 
-### Adventure Games
-
-```{r, echo = FALSE, include = F}
-
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
-  filter(genre == "Adventure") %>% 
-  filter(sales_year == 2016) %>% 
-  slice_max(global_sales, n = 5)
-
-```
-
-```{r, echo = FALSE, include = F}
-
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
-  filter(genre == "Adventure") %>% 
-  filter(sales_year == 2019) %>% 
-  slice_max(global_sales, n = 5)
-
-```
-
-```{r, echo = F}
-
-tibble(
-  "2016" = c("Super Mario Land 2: 6 Golden Coins (GB)",
-             "Assassin's Creed (X360)",
-             "Assassin's Creed (PS3)",
-             "Zelda II: The Adventure of Link (NES)",
-             "Rugrats: Search For Reptar (PS)"),
-  
-  "2019" = c("Tomb Raider II (PS)",
-             "LEGO Indiana Jones: The Original Adventures (X360)",
-             "Tomb Raider III: Adventures of Lara Croft (PS)",
-             "LEGO Batman: The Videogame (X360)",
-             "Rugrats: Search For Reptar (PS)")
-) %>% 
-  pander()
-
-```
-
-**Super Mario Land 2: 6 Golden Coins** is the number one 'Adventure' game, released in 1992 for the GameBoy. **Assassin's Creed** is the top 'modern' game in this category.
-
-<hr>
-
 ### Strategy Games
 
-```{r, echo = FALSE, include = F}
+```{r, echo = FALSE, include = T}
 
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
+clean_sales_data %>% 
   filter(genre == "Strategy") %>% 
-  filter(sales_year == 2016) %>% 
   slice_max(global_sales, n = 5)
-
-```
-```{r, echo = FALSE, include = F}
-
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
-  filter(genre == "Strategy") %>% 
-  filter(sales_year == 2019) %>% 
-  slice_max(global_sales, n = 5)
-
-```
-
-```{r, echo = FALSE}
-
-tibble(
-  "2016" = c("Pokemon Stadium (N64)",
-             "Warzone 2100 (PS)",
-             "StarCraft II: Wings of Liberty (PC)",
-             "Warcraft II: Tides of Darkness (PC)",
-             "Pokémon Trading Card Game (GB)"),
-  
-  "2019" = c("Warzone 2100 (PS)",
-             "Command & Conquer: Red Alert (PC)",
-             "Halo Wars (X360)",
-             "Mario + Rabbids: Kingdom Battle (NS)",
-             "Theme Hospital (PC)")
-) %>% 
-  pander()
 
 ```
 
@@ -315,34 +272,25 @@ tibble(
 
 <hr>
 
+# Top Games of All Time
 
-```{r, include=FALSE}
+### Top 10 Games
 
+```{r,echo = FALSE}
 
-sales_all_clean %>% 
-  filter(year_of_release != "Unknown") %>% 
-  summarise(min = min(year_of_release), 
-            max = max(year_of_release))
-
-# 1970 to 2020
+clean_sales_data %>% 
+  slice_max(global_sales, n = 10)
 
 ```
+The results are interesting; **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
 
-#
+<hr>
 
-```{r, echo = FALSE}
+### Top Game Genres
 
-sales_all_clean %>% 
-  filter(year_of_release >= "1970" & year_of_release <= "1979") %>% 
-  slice_max(global_sales, n = 5) %>% 
-  select(name, console, year_of_release, genre, global_sales) 
+```{r, message=FALSE, echo = FALSE}
 
-```
-
-```{r, echo = FALSE}
-
-sales_all_clean %>% 
-  filter(year_of_release >= "1970" & year_of_release <= "1979") %>% 
+clean_sales_data %>% 
   group_by(genre) %>% 
   summarise(global_sales_millions = sum(global_sales)) %>% 
   arrange(desc(global_sales_millions)) %>% 
@@ -353,39 +301,20 @@ sales_all_clean %>%
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "1970s",
+       subtitle = "from 1970 to 2020",
        x = "Genre", 
        y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 0.5, 1, 1.5 ),
-                     expand = c(0.025, 0.025))
-  
-  
-
-```
-
-
-```{r}
-
-sales_all_clean %>% 
-  filter(sales_year == 2016) %>% 
-  group_by(genre) %>% 
-  summarise(global_sales_millions = sum(global_sales)) %>% 
-  arrange(desc(global_sales_millions)) %>% 
-  
-  ggplot(aes(x = reorder(genre, global_sales_millions), 
-             y = global_sales_millions)) +
-  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
-  coord_flip() +
-  theme_light() +
-  labs(title = "Top Performing Games Genres", 
-       subtitle = "in 2016",
-       x = "Genre", 
-       y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750),
+   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250),
                      expand = c(0.025, 0.025))
 
 
 ```
+
+
+
+
+
+
 
 
 

@@ -121,7 +121,7 @@ colSums(is.na(sales_2019_clean))
 
 unique(sales_2019_clean$genre)
 
-# Change 'misc' to 'other':
+# Sort out genres:
 
 sales_2019_clean <- sales_2019_clean %>% 
   mutate(genre = recode(genre, "Misc" = "Other",
@@ -174,8 +174,13 @@ sales_2016_clean <- sales_2016_clean %>%
 sales_2019_clean <- sales_2019_clean %>% 
   mutate(year_of_release = as.factor(year_of_release))
 
+# Join 2016 and 2019:
 
-sales_all_clean <- bind_rows(sales_2016_clean, sales_2019_clean)
+sales_all_clean <- bind_rows(sales_2019_clean, sales_2016_clean) %>% 
+  distinct(name, console, .keep_all = T)
+
+
+# All sales data ---------------------------------------------------------------
 
 sales_all_clean <- sales_all_clean %>% 
   mutate(year_of_release = recode(year_of_release,
@@ -239,8 +244,8 @@ sales_xbox_ps4_clean <- sales_xbox_ps4_clean %>%
 # note - shipped is the amount of units sent by the publisher to retail
 
 
-no_duplicates <- sales_all_clean %>% 
-  distinct(name, console, .keep_all = T)
+# Join all data ----------------------------------------------------------------
+
 
 mega_data <- bind_rows(sales_xbox_ps4_clean, sales_all_clean) %>% 
   distinct(name, console, .keep_all = T) %>% 
@@ -248,6 +253,19 @@ mega_data <- bind_rows(sales_xbox_ps4_clean, sales_all_clean) %>%
   filter(global_sales >0) %>% 
   arrange(desc(global_sales)) %>% 
   replace_na(list(developer = "Unknown"))
+
+
+unique(mega_data$genre)
+
+# Clean up genres:
+
+mega_data <- mega_data %>% 
+  mutate(genre = recode(genre, "Action" = "Action-Adventure",
+                        "Adventure" = "Action-Adventure",
+                        "Misc" = "Other",
+                        "MMO" = "Other",
+                        "Party" = "Other",
+                        "Visual Novel" = "Other")) 
 
 
 # Write clean data to folder:
