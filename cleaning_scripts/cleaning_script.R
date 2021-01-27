@@ -133,7 +133,7 @@ sales_2019_clean <- sales_2019_clean %>%
                         "Board Game" = "Other",
                         "Visual Novel" = "Other",
                         "Education" = "Other",
-                        ))
+                        )) 
 
 # Rename columns:
 
@@ -176,6 +176,10 @@ sales_2019_clean <- sales_2019_clean %>%
 
 
 sales_all_clean <- bind_rows(sales_2016_clean, sales_2019_clean)
+
+sales_all_clean <- sales_all_clean %>% 
+  mutate(year_of_release = recode(year_of_release,
+                                  "N/A" = "Unknown"))
 
 colSums(is.na(sales_all_clean))
 
@@ -234,11 +238,21 @@ sales_xbox_ps4_clean <- sales_xbox_ps4_clean %>%
 
 # note - shipped is the amount of units sent by the publisher to retail
 
+
+no_duplicates <- sales_all_clean %>% 
+  distinct(name, console, .keep_all = T)
+
+mega_data <- bind_rows(sales_xbox_ps4_clean, sales_all_clean) %>% 
+  distinct(name, console, .keep_all = T) %>% 
+  select(-c(sales_year, na_sales, eu_sales, jp_sales, other_sales)) %>% 
+  filter(global_sales >0) %>% 
+  arrange(desc(global_sales)) %>% 
+  replace_na(list(developer = "Unknown"))
+
+
 # Write clean data to folder:
 
-write_csv(sales_all_clean, "clean_data/sales_all_clean")
-write_csv(shipped_2019_clean, "clean_data/shipped_2019_clean")
-write_csv(sales_xbox_ps4_clean, "clean_data/sales_xbox_ps4_clean")
+write_csv(mega_data, "clean_data/clean_sales_data.csv")
 
 
 

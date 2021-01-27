@@ -31,24 +31,17 @@ library(here)
 
 here::here()
 
-sales_all_clean <- read_csv(here("clean_data", "sales_all_clean"))
-sales_xbox_ps4_clean <- read_csv(here("clean_data", "sales_xbox_ps4_clean"))
-shipped_2019_clean <- read_csv(here("clean_data", "shipped_2019_clean"))
+clean_sales_data <- read_csv(here("clean_data", "clean_sales_data.csv"))
+
 
 ```
 
 
 # Introduction 
 
-The following report provides an exploratory analysis into the sales of video games. There are three data sets under observation within this report: 
+The following report provides an exploratory analysis into the sales of video games. The data used for this report contains the global sales of games dating as far back as 1970 through to the present. Having such a vast range of games sales allows for a interesting look in to trends in top games across the years in order to identify what types of games, historically have performed well.
 
-The first data set contains the sales of video games across all the platforms and includes a wide range of games from 1970 up to 2019. The data set contains sales recorded in 2016 and 2019 respectively.
-
-The second data set contains the details of all the shipped games from 2019 and also includes a wide range of games released in the early eighties up to 2019.
-
-The final data set contains the sales of XBox One and PS4 games released from 2013 to 2019.
-
-# Game Sales 2016 and 2019 
+# The Data
 
 ### General Observations
 
@@ -56,74 +49,31 @@ The final data set contains the sales of XBox One and PS4 games released from 20
 
 ```{r, echo = FALSE}
 
-sales_all_clean %>% 
+clean_sales_data %>% 
   head()
 
 ```
+The data is an amalgamation of 4 data sets, each with their own set of sales and useful information. The final data contains the most up to date sales figures for each game as of 2019.
 
 <br>
 
-**What are the top 10 games in 2016?**
+**What are the top 10 games?**
 
 ```{r,echo = FALSE}
 
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
-  filter(sales_year == 2016) %>% 
-  arrange(desc(global_sales)) %>% 
+clean_sales_data %>% 
   slice_max(global_sales, n = 10)
 
 ```
-The results are interesting; in 2016 **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
+The results are interesting; **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
 
 <hr>
 
-**What are the top 10 games in 2019?**
-
-```{r,echo = FALSE, include = T}
-
-sales_all_clean %>% 
-  select(name, console, year_of_release, genre, publisher, global_sales, sales_year) %>% 
-  filter(sales_year == 2019) %>% 
-  arrange(desc(global_sales)) %>% 
-  slice_max(global_sales, n = 10)
-
-```
-
-<br>
-
-How do they compare?
-
-```{r, echo = FALSE}
-
-tibble(
-  "2016" = c("Wii Sports (Wii)", "Super Mario Bros. (NES)", 
-             "Mario Kart Wii (Wii)", "Wii Sports Resort (Wii)",
-             "Pokemon Red/Pokemon Blue (GB)", "Tetris (GB)",
-             "New Super Mario Bros. (DS)", "Wii Play (Wii)",
-             "New Super Mario Bros. Wii (Wii)", "Duck Hunt (NES)"),
-  
-  "2019" = c("Grand Theft Auto V (PS3)", "Grand Theft Auto V (PS4)",
-             "Grand Theft Auto: Vice City (PS2)", "Grand Theft Auto V (X360)",
-             "Call of Duty: Black Ops 3 (PS4)", 
-             "Call of Duty: Modern Warfare 3 (X360)", 
-             "Call of Duty: Black Ops (X360)",
-             "Red Dead Redemption 2 (PS4)", "Call of Duty: Black Ops II (X360)",
-             "Call of Duty: Black Ops II (PS3)")
-) %>% 
-  pander()
-
-```
-Interestingly, **Nintendo** have been knocked out the top ten in 2019. **Grand Theft Auto** and **Call of Duty** being the top ranked games.
-
-<hr>
-
-**What are the top game genres of 2016?**
+**What are the top game genres?**
 
 ```{r, message=FALSE, echo = FALSE}
 
-sales_all_clean %>% 
-  filter(sales_year == 2016) %>% 
+clean_sales_data %>% 
   group_by(genre) %>% 
   summarise(global_sales_millions = sum(global_sales)) %>% 
   arrange(desc(global_sales_millions)) %>% 
@@ -134,62 +84,16 @@ sales_all_clean %>%
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "in 2016",
+       subtitle = "from 1970 to 2020",
        x = "Genre", 
        y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750),
+   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250),
                      expand = c(0.025, 0.025))
 
 
 ```
 
 <br>
-
-**What are the top game genres of 2019?**
-
-```{r, message=FALSE, echo = FALSE}
-
-sales_all_clean %>% 
-  filter(sales_year == 2019) %>% 
-  group_by(genre) %>% 
-  summarise(global_sales_millions = sum(global_sales)) %>% 
-  arrange(desc(global_sales_millions)) %>% 
-  
-  ggplot(aes(x = reorder(genre, global_sales_millions), 
-             y = global_sales_millions)) +
-  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
-  coord_flip() +
-  theme_light() +
-  labs(title = "Top Performing Games Genres", 
-       subtitle = "in 2019",
-       x = "Genre", 
-       y = "Global Sales (millions)") +
-   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500),
-                     expand = c(0.025, 0.025))
-
-
-```
-
-<br>
-
-How do they compare?
-
-```{r, echo = FALSE}
-
-tibble(
-  "2016" = c("Action", "Sports", "Shooter", "Role-Playing", "Platform", "Other",
-             "Racing", "Fighting", "Simulation", "Puzzle", "Adventure", 
-             "Strategy"),
-  "2019" = c("Action", "Sports", "Shooter", "Other", "Racing", "Role-Playing",
-             "Platform", "Fighting", "Adventure", "Simulation", "Strategy",
-             "Puzzle")
-) %>% 
-  pander()
-
-```
-Interesting results; you can see that **Action**, **Sports** and **Shooter** 
-games maintained their position as top 3 games genres. **Racing** games have 
-made their way into the top 5.
 
 ### Action Games
 
