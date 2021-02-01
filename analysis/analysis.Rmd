@@ -61,10 +61,13 @@ The data is an amalgamation of 4 data sets, each with their own set of sales and
 
 ### 1970's
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 
 clean_sales_data %>% 
-  filter(year_of_release >= "1970" & year_of_release <= "1979") 
+  group_by(name) %>% 
+  filter(year_of_release >= "1970" & year_of_release <= "1979") %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
  
 ```
 
@@ -98,10 +101,13 @@ ggsave("1970_plot.png", path = here("plots"))
 
 ### 1980's
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 
 clean_sales_data %>% 
-  filter(year_of_release >= "1980" & year_of_release <= "1989") 
+  group_by(name) %>% 
+  filter(year_of_release >= "1980" & year_of_release <= "1989") %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
  
 ```
 
@@ -130,12 +136,17 @@ ggsave("1980_plot.png", path = here("plots"))
 
 ```
 
+<br>
+
 ### 1990's
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 
 clean_sales_data %>% 
-  filter(year_of_release >= "1990" & year_of_release <= "1999") 
+  group_by(name) %>% 
+  filter(year_of_release >= "1990" & year_of_release <= "1999") %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
  
 ```
 
@@ -163,12 +174,17 @@ ggsave("1990_plot.png", path = here("plots"))
 
 ```
 
+<br>
+
 ### 2000's
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 
 clean_sales_data %>% 
-  filter(year_of_release >= "2000" & year_of_release <= "2010") 
+  group_by(name) %>% 
+  filter(year_of_release >= "2000" & year_of_release <= "2010") %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
  
 ```
 
@@ -196,9 +212,11 @@ ggsave("2000_plot.png", path = here("plots"))
 
 ```
 
+<br>
+
 ### 2010's
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 
 clean_sales_data %>% 
   group_by(name) %>% 
@@ -232,17 +250,20 @@ ggsave("2010_plot.png", path = here("plots"))
 
 ```
 
+<br>
+
 # Games Genres
 
 ### Action and Adventure Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
   group_by(name) %>% 
   filter(genre == "Action-Adventure") %>% 
   summarise(total_global_sales = sum(global_sales)) %>% 
-  arrange(desc(total_global_sales))
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 **Grand Theft Auto** clearly dominates the **Action-Adventure** category.
@@ -279,11 +300,14 @@ ggsave("action_adventure_plot.png", path = here("plots"))
 
 ### Sports Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Sports") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 **Wii Sports** clearly wins this category. **FIFA** also highly ranked in this 
@@ -321,14 +345,17 @@ ggsave("sports_plot.png", path = here("plots"))
 
 ### Shooter Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Shooter") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-**Duck Hunt**, the classic Nintendo game from 1984 tops this category. **Call of Duty** tops the 'modern' games in this category.
+**Call of Duty** tops the **shooter** games in this category.
 
 ```{r, echo = FALSE, message = F, warning = FALSE}
 
@@ -362,11 +389,14 @@ ggsave("shooter_plot.png", path = here("plots"))
 
 ### Role Playing Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Role-Playing") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 **Pokemon** are the clear winners from this category.
@@ -401,14 +431,17 @@ clean_sales_data %>%
 
 ### Platform Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Platform") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-**Super Mario** wins.
+**Super Mario** clearly dominates the **platform** games category.
 
 ```{r, echo = FALSE, message = F, warning = FALSE}
 
@@ -440,14 +473,17 @@ clean_sales_data %>%
 
 ### Other Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Other") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-This is an interesting category as there is quite a mix of top games. It is clear that the Wii is popular, especially with interactive games, such as **Wii Play** and **Just Dance** scoring highly.
+This is an interesting category as there is quite a mix of top games. **Minecraft** takes the top spot. **Just Dance** also performing well i nthis category.
 
 ```{r, echo = FALSE, message = F, warning = FALSE}
 
@@ -479,14 +515,17 @@ clean_sales_data %>%
 
 ### Racing Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Racing") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-**Mario Kart** taking lead in this category. Special mention to **Gran Turismo** also as the top 'non-Nintendo' game.
+**Mario Kart** taking lead in this category. **Gran Turismo** also performing very well.
 
 ```{r, echo = FALSE, message = F, warning = FALSE}
 
@@ -518,14 +557,17 @@ clean_sales_data %>%
 
 ### Fighting Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Fighting") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-**Super Smash Bros. Brawl** for the Wii taking first place in this category. Classic fighting games such as **Tekken** and **Street Fighter** are very popular.
+**Super Smash Bros. Brawl** taking first place in this category. Classic fighting games such as **Tekken**, **Mortal Kombat** and **Street Fighter** are very popular.
 
 ```{r, echo = FALSE, message = F, warning = FALSE}
 
@@ -557,11 +599,14 @@ clean_sales_data %>%
 
 ### Simulation Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Simulation") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 Interesting result from this category, **Nintendogs** is top in global sales. **The Sims** and **Animal Crossing** also performing well.
@@ -596,11 +641,14 @@ clean_sales_data %>%
 
 ### Puzzle Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Puzzle") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 **Tetris** is the top classic puzzle game. **Brain Age** performed very well in this category.
@@ -635,11 +683,14 @@ clean_sales_data %>%
 
 ### Strategy Games
 
-```{r, echo = FALSE, include = T}
+```{r, echo = FALSE, include = T, message=FALSE}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Strategy") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
 
@@ -820,13 +871,44 @@ ggsave("rest_of_world_plot.png", path = here("plots"))
 
 ### Top 10 Games
 
-```{r,echo = FALSE}
+```{r, include=T, message=FALSE, echo=FALSE}
 
 clean_sales_data %>% 
-  slice_max(global_sales, n = 10)
+  group_by(name) %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales)) %>% 
+  slice_max(total_global_sales, n = 10)
 
 ```
-The results are interesting; **Nintendo** fill the entire top ten with a mix of retro games and games for the Wii console. Super Mario Bros, which was originally released in 1985 ranked number two in the best selling games. Taking first place is Wii Sports.
+
+```{r, warning=FALSE, message=FALSE, include=FALSE}
+
+# North America Best Game
+clean_sales_data %>% 
+  group_by(name) %>% 
+  select(-c(eu_sales, jp_sales, global_sales, other_sales)) %>% 
+  summarise(total_na_sales = sum(na_sales)) %>% 
+  arrange(desc(total_na_sales)) 
+
+# Europe Best Game
+clean_sales_data %>% 
+  group_by(name) %>% 
+  select(-c(na_sales, jp_sales, global_sales, other_sales)) %>% 
+  summarise(total_eu_sales = sum(eu_sales)) %>% 
+  arrange(desc(total_eu_sales)) 
+
+# Japan Best Game
+clean_sales_data %>% 
+  group_by(name) %>% 
+  select(-c(eu_sales, na_sales, global_sales, other_sales)) %>% 
+  summarise(total_jp_sales = sum(jp_sales)) %>% 
+  arrange(desc(total_jp_sales)) 
+
+
+```
+
+
+The results are interesting; **Nintendo** taking up 60% of the top ten with the top game being Wii Sports.
 
 <hr>
 
@@ -857,6 +939,26 @@ ggsave("top_genres_plot.png", path = here("plots"))
 ```
 
 # Recommendations
+
+Well it's not that straight forward. The top performing games, especially the likes of Wii Sports are pretty unique and could of easily gone the other way and not been a hit at all. 
+
+I think it's pretty safe to say that Action and Adventure games do well. Grand Theft Auto is the best example. People love it for many reasons, mostly:
+
+1. Aesthetics - the graphics are very good and it's great to look at.
+
+2. Characters - you are able to choose from different protagonists, who are unique.
+
+3. It's also a very good multi-player game.
+
+Sports games may be a little risky to be honest. Wii Sports is a bit of an outlier and FIFA pretty much dominates the football category. 
+
+Shooter games could be a recommendation from me. In terms of trends, sales have never gone down. I think fun, nostalgia games such as Duck Hunt or even the N64 classic Golden Eye, which is an absolute cult classic could be a suitable route. However, this should perhaps be left to Nintendo and actually producing something more in line with Call of Duty might be more appropriate. 
+
+It also depends on what market you intend to launch the game. North America and Europe are fairly similar in terms to the top performing games, however if you were to only target Japan. Action and Adventure, Sports and Shooter games would not be the best type of game as they are more into Role Playing games and in particular, Pokemon!
+
+It's important to learn what games sell many copies and to understand why they are popular, however I think ultimately, the most important thing for creating a new game is that it needs to be unique and creative in order to stand out. 
+
+<hr>
 
 
 
