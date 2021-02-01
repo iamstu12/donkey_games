@@ -87,6 +87,8 @@ clean_sales_data %>%
        y = "Global Sales (millions)") +
    scale_y_continuous(breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5),
                      expand = c(0.025, 0.025))
+
+ggsave("1970_plot.png", path = here("plots"))
   
   
 
@@ -123,6 +125,9 @@ clean_sales_data %>%
    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130),
                      expand = c(0.025, 0.025))
 
+
+ggsave("1980_plot.png", path = here("plots"))
+
 ```
 
 ### 1990's
@@ -154,6 +159,8 @@ clean_sales_data %>%
    scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150, 175, 200),
                      expand = c(0.025, 0.025))
 
+ggsave("1990_plot.png", path = here("plots"))
+
 ```
 
 ### 2000's
@@ -179,11 +186,13 @@ clean_sales_data %>%
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "2000s",
+       subtitle = "2000's",
        x = "Genre", 
        y = "Global Sales (millions)") +
    scale_y_continuous(breaks = c(0, 200, 400, 600, 800, 1000, 1200, 1400),
                      expand = c(0.025, 0.025))
+
+ggsave("2000_plot.png", path = here("plots"))
 
 ```
 
@@ -192,7 +201,10 @@ clean_sales_data %>%
 ```{r, echo = FALSE}
 
 clean_sales_data %>% 
-  filter(year_of_release >= "2010" & year_of_release <= "2020") 
+  group_by(name) %>% 
+  filter(year_of_release >= "2010" & year_of_release <= "2020") %>% 
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
  
 ```
 
@@ -210,26 +222,58 @@ clean_sales_data %>%
   coord_flip() +
   theme_light() +
   labs(title = "Top Performing Games Genres", 
-       subtitle = "2010s",
+       subtitle = "2010's",
        x = "Genre", 
        y = "Global Sales (millions)") +
    scale_y_continuous(breaks = c(0, 200, 400, 600, 800, 1000, 1200, 1400),
                      expand = c(0.025, 0.025))
 
+ggsave("2010_plot.png", path = here("plots"))
+
 ```
 
-# Top Games by Genre
+# Games Genres
 
-### Action-Adventure Games
+### Action and Adventure Games
 
 ```{r, echo = FALSE, include = T}
 
 clean_sales_data %>% 
+  group_by(name) %>% 
   filter(genre == "Action-Adventure") %>% 
-  slice_max(global_sales, n = 5)
+  summarise(total_global_sales = sum(global_sales)) %>% 
+  arrange(desc(total_global_sales))
 
 ```
 **Grand Theft Auto** clearly dominates the **Action-Adventure** category.
+
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Action-Adventure") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Action and Adventure Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000),
+                     expand = c(0.025, 0.025))
+
+ggsave("action_adventure_plot.png", path = here("plots"))
+
+
+
+```
 
 <hr>
 
@@ -245,6 +289,34 @@ clean_sales_data %>%
 **Wii Sports** clearly wins this category. **FIFA** also highly ranked in this 
 category.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Sports") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Sports Games", 
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600, 700, 800),
+                     expand = c(0.025, 0.025))
+
+ggsave("sports_plot.png", path = here("plots"))
+
+
+
+```
+
 <hr>
 
 ### Shooter Games
@@ -257,6 +329,34 @@ clean_sales_data %>%
 
 ```
 **Duck Hunt**, the classic Nintendo game from 1984 tops this category. **Call of Duty** tops the 'modern' games in this category.
+
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Shooter") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Shooter Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600),
+                     expand = c(0.025, 0.025))
+
+ggsave("shooter_plot.png", path = here("plots"))
+
+
+
+```
 
 <hr>
 
@@ -271,6 +371,32 @@ clean_sales_data %>%
 ```
 **Pokemon** are the clear winners from this category.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Role-Playing") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Role Playing Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400),
+                     expand = c(0.025, 0.025))
+
+
+
+```
+
 <hr>
 
 ### Platform Games
@@ -283,6 +409,32 @@ clean_sales_data %>%
 
 ```
 **Super Mario** wins.
+
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Platform") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Platform Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400),
+                     expand = c(0.025, 0.025))
+
+
+
+```
 
 <hr>
 
@@ -297,6 +449,32 @@ clean_sales_data %>%
 ```
 This is an interesting category as there is quite a mix of top games. It is clear that the Wii is popular, especially with interactive games, such as **Wii Play** and **Just Dance** scoring highly.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Other") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Other Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500),
+                     expand = c(0.025, 0.025))
+
+
+
+```
+
 <hr>
 
 ### Racing Games
@@ -309,6 +487,32 @@ clean_sales_data %>%
 
 ```
 **Mario Kart** taking lead in this category. Special mention to **Gran Turismo** also as the top 'non-Nintendo' game.
+
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Racing") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Racing Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500),
+                     expand = c(0.025, 0.025))
+
+
+
+```
 
 <hr>
 
@@ -323,6 +527,32 @@ clean_sales_data %>%
 ```
 **Super Smash Bros. Brawl** for the Wii taking first place in this category. Classic fighting games such as **Tekken** and **Street Fighter** are very popular.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Fighting") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Fighting Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250),
+                     expand = c(0.025, 0.025))
+
+
+
+```
+
 <hr>
 
 ### Simulation Games
@@ -336,6 +566,32 @@ clean_sales_data %>%
 ```
 Interesting result from this category, **Nintendogs** is top in global sales. **The Sims** and **Animal Crossing** also performing well.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Simulation") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Simulation Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250),
+                     expand = c(0.025, 0.025))
+
+
+
+```
+
 <hr>
 
 ### Puzzle Games
@@ -348,6 +604,32 @@ clean_sales_data %>%
 
 ```
 **Tetris** is the top classic puzzle game. **Brain Age** performed very well in this category.
+
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Puzzle") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Puzzle Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120),
+                     expand = c(0.025, 0.025))
+
+
+
+```
 
 <hr>
 
@@ -363,9 +645,178 @@ clean_sales_data %>%
 
 **Pokemon Stadium** is the top game in this category.
 
+```{r, echo = FALSE, message = F, warning = FALSE}
+
+clean_sales_data %>% 
+  filter(genre == "Strategy") %>% 
+  mutate(year_of_release = as.numeric(year_of_release)) %>% 
+  filter(year_of_release != "Unknown") %>% 
+  mutate(decade = floor(year_of_release / 10) * 10) %>% 
+  filter(decade != 2020) %>% 
+  group_by(decade) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  
+  ggplot(aes(x = decade, y = decade_sales)) +
+  geom_area(alpha = 0.5, fill = "#666633") +
+  geom_line(colour = "#cc9900", size = 1.2) +
+  geom_point(colour = "#666633") +
+  labs(title = "Strategy Games",
+       x = "Decade", 
+       y = "Global Sales (millions)") +
+  theme_light() +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000),
+                     expand = c(0.025, 0.025))
+
+
+
+```
+
 <hr>
 
-# Top Games of All Time
+# Regional Sales 
+
+### All Regions
+
+```{r, include=F}
+
+clean_sales_data %>% 
+  summarise(north_america_sales = sum(na_sales)/sum(global_sales)*100, 
+            japan_sales = sum(jp_sales)/sum(global_sales)*100,
+            europe_sales = sum(eu_sales)/sum(global_sales)*100,
+            other_sales = sum(other_sales)/sum(global_sales)*100) 
+
+```
+
+
+```{r, echo=FALSE, message=FALSE}
+
+tibble(
+  `North America` = 0.49,
+  `Japan` = 0.14,
+  `Europe` = 0.28,
+  `Rest of the World` = 0.09
+) %>% 
+  gather(key = Region, value = Percent) %>% 
+  
+  ggplot(aes(x = reorder(Region, -Percent), y = Percent)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  theme_light() +
+  labs(title = "Sales by Region", 
+       subtitle = "from 1970 to 2020",
+       x = " ", 
+       y = " ") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) 
+
+ggsave("region_plot.png", path = here("plots"))
+
+
+```
+
+### North America
+
+```{r, message=FALSE, echo = FALSE}
+
+clean_sales_data %>% 
+  group_by(genre) %>% 
+  summarise(na_sales_millions = sum(na_sales)) %>% 
+  arrange(desc(na_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, na_sales_millions), 
+             y = na_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "North America Sales", 
+       subtitle = "from 1970 to 2020",
+       x = "Genre", 
+       y = "Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250),
+                     expand = c(0.025, 0.025))
+
+ggsave("north_america_plot.png", path = here("plots"))
+
+
+```
+
+### Europe
+
+```{r, message=FALSE, echo = FALSE}
+
+clean_sales_data %>% 
+  group_by(genre) %>% 
+  summarise(eu_sales_millions = sum(eu_sales)) %>% 
+  arrange(desc(eu_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, eu_sales_millions), 
+             y = eu_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "Europe Sales", 
+       subtitle = "from 1970 to 2020",
+       x = "Genre", 
+       y = "Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600, 1750),
+                     expand = c(0.025, 0.025))
+
+ggsave("europe_plot.png", path = here("plots"))
+
+
+```
+
+### Japan
+
+```{r, message=FALSE, echo = FALSE}
+
+clean_sales_data %>% 
+  group_by(genre) %>% 
+  summarise(jp_sales_millions = sum(jp_sales)) %>% 
+  arrange(desc(jp_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, jp_sales_millions), 
+             y = jp_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "Japan Sales", 
+       subtitle = "from 1970 to 2020",
+       x = "Genre", 
+       y = "Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250, 300, 350, 400),
+                     expand = c(0.025, 0.025))
+
+ggsave("japan_plot.png", path = here("plots"))
+
+
+```
+
+### Rest of the World
+
+```{r, message=FALSE, echo = FALSE}
+
+clean_sales_data %>% 
+  group_by(genre) %>% 
+  summarise(other_sales_millions = sum(other_sales)) %>% 
+  arrange(desc(other_sales_millions)) %>% 
+  
+  ggplot(aes(x = reorder(genre, other_sales_millions), 
+             y = other_sales_millions)) +
+  geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+  coord_flip() +
+  theme_light() +
+  labs(title = "Rest of the World Sales", 
+       subtitle = "from 1970 to 2020",
+       x = "Genre", 
+       y = "Sales (millions)") +
+   scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 125, 150, 175, 200, 225),
+                     expand = c(0.025, 0.025))
+
+ggsave("rest_of_world_plot.png", path = here("plots"))
+
+
+```
+
+# Top Games
 
 ### Top 10 Games
 
@@ -379,7 +830,7 @@ The results are interesting; **Nintendo** fill the entire top ten with a mix of 
 
 <hr>
 
-### Top Game Genres
+### Top Genres
 
 ```{r, message=FALSE, echo = FALSE}
 
@@ -400,8 +851,13 @@ clean_sales_data %>%
    scale_y_continuous(breaks = c(0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250),
                      expand = c(0.025, 0.025))
 
+ggsave("top_genres_plot.png", path = here("plots"))
+
 
 ```
+
+# Recommendations
+
 
 
 

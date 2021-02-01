@@ -249,7 +249,7 @@ sales_xbox_ps4_clean <- sales_xbox_ps4_clean %>%
 
 mega_data <- bind_rows(sales_xbox_ps4_clean, sales_all_clean) %>% 
   distinct(name, console, .keep_all = T) %>% 
-  select(-c(sales_year, na_sales, eu_sales, jp_sales, other_sales)) %>% 
+  select(-sales_year) %>% 
   filter(global_sales >0) %>% 
   arrange(desc(global_sales)) %>% 
   replace_na(list(developer = "Unknown"))
