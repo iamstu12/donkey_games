@@ -3010,11 +3010,6 @@ div.tocify {
 <h1>Top Games</h1>
 <div id="top-10-games" class="section level3">
 <h3>Top 10 Games</h3>
-<pre class="r"><code>clean_sales_data %&gt;% 
-  group_by(name) %&gt;% 
-  summarise(total_global_sales = sum(global_sales)) %&gt;% 
-  arrange(desc(total_global_sales)) %&gt;% 
-  slice_max(total_global_sales, n = 10)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_global_sales"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Wii Sports","2":"82.53"},{"1":"Grand Theft Auto V","2":"65.46"},{"1":"Super Mario Bros.","2":"45.31"},{"1":"Tetris","2":"35.84"},{"1":"Mario Kart Wii","2":"35.52"},{"1":"Minecraft","2":"33.19"},{"1":"Wii Sports Resort","2":"32.77"},{"1":"Pokemon Red/Pokemon Blue","2":"31.37"},{"1":"Call of Duty: Black Ops","2":"30.99"},{"1":"Call of Duty: Modern Warfare 3","2":"30.71"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -3041,6 +3036,7 @@ div.tocify {
 <p>Shooter games could be a recommendation from me. In terms of trends, sales have never gone down. I think fun, nostalgia games such as Duck Hunt or even the N64 classic Golden Eye, which is an absolute cult classic could be a suitable route. However, this should perhaps be left to Nintendo and actually producing something more in line with Call of Duty might be more appropriate.</p>
 <p>It also depends on what market you intend to launch the game. North America and Europe are fairly similar in terms to the top performing games, however if you were to only target Japan. Action and Adventure, Sports and Shooter games would not be the best type of game as they are more into Role Playing games and in particular, Pokemon!</p>
 <p>It’s important to learn what games sell many copies and to understand why they are popular, however I think ultimately, the most important thing for creating a new game is that it needs to be unique and creative in order to stand out.</p>
+<hr>
 </div>
 
 
