@@ -940,7 +940,7 @@ ggsave("top_genres_plot.png", path = here("plots"))
 
 # Recommendations
 
-Well it's not that straight forward. The top performing games, especially the likes of Wii Sports are pretty unique and could of easily gone the other way and not been a hit at all. 
+Well it's not that straight forward. The top performing games, especially the likes of Wii Sports are pretty unique and could have easily gone the other way and not been a hit at all. 
 
 I think it's pretty safe to say that Action and Adventure games do well. Grand Theft Auto is the best example. People love it for many reasons, mostly:
 
