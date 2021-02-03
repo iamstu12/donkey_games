@@ -67,7 +67,8 @@ clean_sales_data %>%
   group_by(name) %>% 
   filter(year_of_release >= "1970" & year_of_release <= "1979") %>% 
   summarise(total_global_sales = sum(global_sales)) %>% 
-  arrange(desc(total_global_sales))
+  arrange(desc(total_global_sales)) 
+  
  
 ```
 
