@@ -241,8 +241,6 @@ sales_xbox_ps4_clean <- sales_xbox_ps4_clean %>%
 #2. shipped_2019_clean - this only contains shipped values for 2019
 #3. sales_xbox_ps4_clean - this contain sales for unknown year
 
-# note - shipped is the amount of units sent by the publisher to retail
-
 
 # Join all data ----------------------------------------------------------------
 
