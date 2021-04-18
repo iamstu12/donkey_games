@@ -1,5 +1,5 @@
 
-# Create an object for decade sales -----------------------------------------------
+# Create an object for decade sales --------------------------------------------
 
 games_decade_data <- games %>% 
   mutate(year_of_release = as.numeric(year_of_release)) %>% 
@@ -11,16 +11,19 @@ games_decade_data <- games %>%
   arrange(decade)
 
 
-# Create an object for top decade games ----------------------------------------
+# Genre data -------------------------------------------------------------------
 
-games_top_decade <- games %>% 
+games_genre <- games %>% 
   mutate(year_of_release = as.numeric(year_of_release)) %>% 
   filter(year_of_release != "Unknown") %>% 
+  filter(genre != "Music") %>% 
   mutate(decade = floor(year_of_release / 10) * 10) %>% 
   filter(decade != 2020) %>% 
-  group_by(decade, genre, name) %>% 
-  summarise(global_sales_millions = sum(global_sales)) %>% 
-  arrange(desc(global_sales_millions))
+  group_by(decade, genre) %>% 
+  summarise(decade_sales = sum(global_sales)) %>% 
+  arrange(genre)
+
+
 
 
 
