@@ -17,7 +17,7 @@ ui <- dashboardPage(
       menuItem("Games History", tabName = "history", icon = icon("scroll")),
       menuItem("Game Genres", tabName = "genres", icon = icon("gamepad")),
       menuItem("Regional Sales", tabName = "regional", icon = icon("globe")),
-      menuItem("Top Games", tabName = "top", icon = icon("trophy"))
+      menuItem("Console Sales", tabName = "console", icon = icon("gamepad"))
     )
     
   ),
@@ -38,10 +38,11 @@ ui <- dashboardPage(
                     height = NULL,
                     selectInput("decade", 
                                 "Choose your decade:", 
-                                choices = unique(decade$decade),
+                                choices = unique(decade$decade)
+                                
                     )
-                ),
-                
+                )
+
     
               ), # <----------------------------------------- closes fluid row 1
               
@@ -171,10 +172,49 @@ ui <- dashboardPage(
       ), # <------------------------------------------------------- closes tab 3
       
       # <----------------------------------------------------------------- tab 4
-      tabItem(tabName = "top",
-              h2("Top Games")
+      tabItem(tabName = "console",
+              h2("Top Games"),
+              
+              fluidRow( # <----------------------------------------- fluid row 1
+                
+                box(title = "Controls", # <----------- drop down
+                    status = "primary",
+                    solidHeader = TRUE,
+                    width = 3,
+                    height = NULL,
+                    selectInput("console", 
+                                "Choose your console:", 
+                                choices = unique(console$console),
+                    )
+                )
+              ), # <----------------------------------------- closes fluid row 1
+                
+                
+              fluidRow( # <----------------------------------------- fluid row 2
+                  
+                box(title = "Plot", # <--------------- plot
+                    status = "primary",
+                    solidHeader = TRUE,
+                    width = 12,
+                    height = NULL,
+                    plotOutput("plot4")
+                )
+              ), # <----------------------------------------- closes fluid row 2
+              
+              fluidRow( # <----------------------------------------- fluid row 3
+                
+                box(title = "Table", # <-------------- table
+                    status = "primary",
+                    solidHeader = TRUE,
+                    width = 12,
+                    height = NULL,
+                    DT::dataTableOutput("table4")
+                )
+                
+              ), # <------------------------------------------ close fluid row 3
       
       ) # <-------------------------------------------------------- closes tab 4
+    
     
     ) # <------------------------------------------------------ closes tab items
   ) # <--------------------------------------------------- closes dashboard body
@@ -281,6 +321,37 @@ server <- function(input, output) {
       summarise(total_sales = sum(sales)) %>% 
       arrange(desc(total_sales)) %>% 
       filter(region == input$region)
+    
+  })
+  
+  # Plot 4 ----
+  
+  output$plot4 <- renderPlot({
+  
+  console2 %>% 
+    filter(console == input$console) %>% 
+    ggplot(aes(x = reorder(genre, sales_millions), 
+               y = sales_millions)) +
+    geom_col(alpha = 0.8, colour = "white", fill = "#cc9900") +
+    coord_flip() +
+    theme_light() +
+    labs(title = "", 
+         subtitle = "",
+         x = "Genre", 
+         y = "Sales (millions)") 
+    
+  })
+  
+  # Table 4 ----
+  
+  output$table4 <- DT::renderDataTable({
+    
+   console %>% 
+      group_by(name, console) %>% 
+      summarise(total_sales = sum(sales)) %>% 
+      arrange(desc(total_sales)) %>% 
+      filter(console == input$console) 
+      
     
   })
   
